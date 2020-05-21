@@ -32,9 +32,10 @@ int main(int argc, char* argv[]) {
         } else if (result.count("c")) {//启动客户端
             string host = result["c"].as<string>();
             int port = result["p"].as<int>();//端口号
-            int time = result["t"].as<int>();//测试时间
-            int reportInterval = result["i"].as<int>();
+
             if (result.count("b")) {//发送带宽
+                int time = result["t"].as<int>();//测试时间
+                int reportInterval = result["i"].as<int>();
                 string bandwidth = result["b"].as<string>();
                 char bandwidthUnit = bandwidth.at(bandwidth.size() - 1);
                 auto bandwidthValue = std::stoi(bandwidth.substr(0, bandwidth.size() - 1));
@@ -57,7 +58,7 @@ int main(int argc, char* argv[]) {
                         return -1;
                 }
             } else {
-                startClientRtt(host, port, time);
+                startClientRtt(host, port, 10);
             }
 
         } else {

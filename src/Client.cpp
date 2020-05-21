@@ -29,8 +29,8 @@ void Client::close() {
 
 /**
  * 发送rtt测试请求
- * @param testTimes  发送的包的次数
- * @param packetSize 包的数据大小
+ * @param testTimes  发送的包的次数，默认10次
+ * @param packetSize 包的数据大小，默认64
  */
 void Client::startRtt(int testTimes, int packetSize) {
     //1. 发送请求测试
@@ -238,6 +238,12 @@ void Client::sendMsg(const Message& msg) {
 }
 
 
+/**
+ *
+ * @param serverHost
+ * @param serverPort
+ * @param testSeconds 测试时间
+ */
 void startClientRtt(const string& serverHost, int serverPort, int testSeconds) {
     I_LOG("Starting send data to {}:{}", serverHost, serverPort);
     Client client(serverHost, serverPort);

@@ -19,7 +19,7 @@
 
 ```shell script
 ./iNet -c 127.0.0.1 -p 9999 -i 2 -t 10 -b 1M 
-./iNet -c 127.0.0.1 -p 9999 -i 2 -t 10 -b 1M  -r # rtt test
+./iNet -c 127.0.0.1 -p 9999 -r # rtt test 默认测试10次，数据包大小为64B
 ```
 
 ```shell
@@ -95,8 +95,17 @@ packestPerGroup = std::ceil((double)packetsPerSecond * 5 / 1000)
 
 即通过这样的方式按组进行发送，并且每发一组后休息一段时间，能保证1s中发的包的数据是根据速率得来的数目。
 
+### 一些统计量的计算
 
-### 学习文章
+* 往返时延 = 客户端（time1） -> 服务器端 ->（time1） 客户端,此时的当前时间 - time1 即为该数据包的往返时间
+* 带宽 = 服务器端收到的数据包的总大小 / 总时间（= 服务器端收到的第一个包开始知道收到finish包结束）
+* 抖动 = 服务器端统计收到的每个包的到达服务器端所需的时间（当前时间-包携带客户端发送的时间），最后将最大值减去最小值即为平均抖动时间
+* 丢包率 = 服务端收到的数据包数据/客户端发送的数据包数目（在一开始发送请求测试的请求包中包含）
 
+## 学习文章
+
+* [NetTester](http://gitea.seekloud.org:50081/Tao/NetTester)
 * [Linux编程之UDP SOCKET全攻略](https://www.cnblogs.com/skyfsm/p/6287787.html)
 * [UDP编程](https://www.liaoxuefeng.com/wiki/1016959663602400/1017790181885952)
+* [网络性能测试工具iperf详细使用图文教程【转载】](https://www.cnblogs.com/yingsong/p/5682080.html)
+* [网络性能测试工具Iperf介绍](https://www.sdnlab.com/2961.html)
