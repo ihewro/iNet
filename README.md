@@ -19,7 +19,7 @@
 
 ```shell script
 ./iNet -c 127.0.0.1 -p 9999 -i 2 -t 10 -b 1M 
-./iNet -c 127.0.0.1 -p 9999 -r # rtt test 默认测试10次，数据包大小为64B
+./iNet -c 127.0.0.1 -p 9999 # rtt test 默认测试10次，数据包大小为64B
 ```
 
 ```shell

@@ -73,14 +73,14 @@ void Server::start() {
             int msgId = 0;
             Message::getMsgId(recvBuf, msgId);
             switch ((MessageType)msgType) {
-                case MessageType::testRequest: {
+                case MessageType::testRequest: { //对请求进行确认
                     TestRequest req(recvBuf);
                     I_LOG("Got TestRequest, msgId={}, testType={}", req.msgId, (int)req.testType);
                     TestConfirm response(1, testIdGen.fetch_add(1), req.msgId, Message::genMid());
                     I_LOG("Reply Msg TestConfirm, msgId={}, testType={}, rst={}", response.msgId,
                           (int)response.msgType, response.result);
-                    Message::replyMsg(response, conn);
-                    if (req.testType == 2) {//测试带宽
+                    Message::replyMsg(response, conn); //回复请求确认
+                    if (req.testType == 2) {//进入测试带宽流程，接收客户端的数据包，直至finish
                         currentTest = response.testId;
                         bandwidthTest(req.testTime);
                         currentTest = 0;
@@ -89,9 +89,9 @@ void Server::start() {
                     }
                     break;
                 }
-                case MessageType::rttTestMsg: {
+                case MessageType::rttTestMsg: {//rtt测试
+                    //把客户端发的包原封不动的发回去 RttTestMsg，客户端那边去计算时间
                     conn.reply((char*)recvBuf, recvLen);
-                    D_LOG("Reply rttTestMsg, msgId={}", msgId);
                     break;
                 }
                 default:
