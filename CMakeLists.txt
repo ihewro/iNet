@@ -9,7 +9,7 @@ add_executable(${PROJECT_NAME}
         src/Server.cpp
         src/Client.cpp
         utils/cmdParser.cpp
-        src/UdpConnection.cpp)
+        utils/UdpConnection.cpp)
 
 
 target_include_directories(${PROJECT_NAME}

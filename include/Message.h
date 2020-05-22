@@ -65,6 +65,7 @@ class Message {
 
   virtual size_t getLength() const = 0;
 
+  //对象数据转二进制流
   virtual void getBinary(uint8_t* buf, size_t size) const = 0;
 
   static void getMsgType(uint8_t* data, uint8_t& v) {

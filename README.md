@@ -33,8 +33,6 @@
 在UDP模式下，客户端以100Mbps为数据发送速率，测试客户端到服务器上的带宽。
 
 
-
-
 ## 项目文件说明
 
 * 客户端与服务器端连接 UdpConnection.h
@@ -109,7 +107,7 @@ packestPerGroup = std::ceil((double)packetsPerSecond * 5 / 1000)
 #### 使用二进制流传输
 
 这也是netTester使用的方法，即有一个二进制的buffer。然后数据按照固定位置存放到这个二进制的buffer中。
-比如一个测试包包含了：id（int）、ts(longlong)、payloadLen(int 实际数据的大小)、data
+比如一个测试包包含了：id（int）、ts(long long)、payloadLen(int 实际数据的大小)、data
 
 * 存储
 是如何将任意基础数据类型转成二进制的呢，实际上是转成unsigned char类型（1个字节）。比如id 为int类型是4个字节，就把buffer的前4个位置存储这个int
@@ -117,15 +115,14 @@ packestPerGroup = std::ceil((double)packetsPerSecond * 5 / 1000)
 
 * 读出
 比如 buffer 的0，1，2，3 4个位置分别存储了id的4个字节（从低位到高位）。
-我们开始从buffer[3]开始读入到id中，在逐个左移，这样buffer[3] 字节最终就能移到最高位。其他字节同理。
-
-
-另外二进制流的buffer一般都是用unsigned char* 原因在于无符号的数据 强制转换成别的数据类型的时候，符号扩展都是高位补0，所以不影响数据。
-如果是char * 类型，符号扩展的时候，高位补符号位，则会丢失原始数据。
+我们开始从buffer[3]开始读入到id中，**在逐个左移位**，这样buffer[3] 字节最终就能移到最高位。其他字节同理。
+然后每个字节是这么拼起来的：`num |= (T)(buf[len - 1 - i] & byMask);` byMask是一个`0xff`，为什么要做一个与运算，与计算机的补码有关
+[byte & 0xff](https://my.oschina.net/andyfeng/blog/1621012)
 
 ----
 
-这种方式类似udp协议的实现，很原始。但无疑速度应该是最快的。
+另外二进制流的buffer一般都是用unsigned char* 原因在于无符号的数据 强制转换成别的数据类型的时候，符号扩展都是高位补0，所以不影响数据。
+如果是char * 类型，符号扩展的时候，高位补符号位，则会丢失原始数据。
 
 #### 传输结构体struct
 
@@ -134,10 +131,40 @@ packestPerGroup = std::ceil((double)packetsPerSecond * 5 / 1000)
 
 
 #### 序列化类
-这个可能是最容易想到的，序列化json字符串，然后另一方再解析就可以了。缺点是需要json解析工具
+这个可能是最容易想到的，序列化json字符串，然后另一方再解析就可以了。
+缺点是需要json解析工具
 可以使用腾讯出品的，rapidJson
 https://github.com/Tencent/rapidjson/
 
+但是用在这里项目里面可能不太适合，因为我们发送的数据包的大小是固定字节（除掉head信息），如果转成字符串，字符串的字节和我们期待的字节数不一样。
+
+
+### udp 编程基础
+
+#### 创建socket
+
+`SOCK_DGRAM`指定了这个Socket的类型是UDP。
+
+* 客户端  
+```c++
+sock = socket(AF_INET, SOCK_DGRAM, 0)
+```
+
+* 服务端
+
+```c++
+sock = socket(AF_INET, SOCK_DGRAM, 0)
+//绑定端口
+localAddr = SocketUtil::createAddr(localPort, localIp);
+bind(sock, (sockaddr*)&localAddr, sizeof(sockaddr_in))
+```
+
+#### 发送和接收数据
+* 发送 sendto
+* 接收 recvfrom
+
+
+和tcp编程类似，区别是发送消息前不需要建立连接。
 
 ## 学习文章
 

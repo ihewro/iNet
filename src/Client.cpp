@@ -239,7 +239,7 @@ void Client::sendMsg(const Message& msg) {
 
 
 /**
- *
+ * rtt测试
  * @param serverHost
  * @param serverPort
  * @param testSeconds 测试时间
@@ -251,6 +251,16 @@ void startClientRtt(const string& serverHost, int serverPort, int testSeconds) {
     client.close();
 }
 
+/**
+ * bandwidth 测试
+ * @param serverHost
+ * @param serverPort
+ * @param testSeconds
+ * @param bandwidth
+ * @param bandwidthUnit
+ * @param packetSize
+ * @param reportInterval
+ */
 void startClientBandwidth(const string& serverHost,
                           int serverPort,
                           int testSeconds,
