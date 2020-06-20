@@ -137,7 +137,8 @@ void Server::bandwidthTest(int testSeconds) {
 
         if (startTimeMs > 0 &&
             seeker::Time::currentTime() - startTimeMs > testSeconds * 1000 + 5000) {
-            W_LOG("Test timeout. testId={}", currentTest);
+            W_LOG("startTimeMs: {},testSeconds:{}",startTimeMs,testSeconds);
+            W_LOG("Test timeout: {}, testId={}",seeker::Time::currentTime() - startTimeMs, currentTest);
             break;
         }
 

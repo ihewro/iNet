@@ -37,6 +37,7 @@ int main(int argc, char* argv[]) {
                 int time = result["t"].as<int>();//测试时间
                 int reportInterval = result["i"].as<int>();
                 string bandwidth = result["b"].as<string>();
+                I_LOG("time:{},reportInterval:{},bandwidth:{}",time,reportInterval,bandwidth);
                 char bandwidthUnit = bandwidth.at(bandwidth.size() - 1);
                 auto bandwidthValue = std::stoi(bandwidth.substr(0, bandwidth.size() - 1));
                 switch (bandwidthUnit) {
